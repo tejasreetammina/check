@@ -12,8 +12,6 @@ datagroup: priyanka_dashboard_default_datagroup {
   max_cache_age: "1 hour"
 }
 
-persist_with: priyanka_dashboard_default_datagroup
-
 # Explores allow you to join together different views (database tables) based on the
 # relationships between fields. By joining a view into an Explore, you make those
 # fields available to users for data analysis.
