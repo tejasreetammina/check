@@ -19,6 +19,19 @@ view: Sales {
     sql: ${TABLE}.transaction_id;;
   }
 
+  dimension: transaction_date {
+    type: date
+    sql: ${TABLE}.date ;;
+  }
+
+  dimension_group: transaction_date_group {
+    type:time
+    timeframes: [ date, week,month,year, raw]
+    datatype: date
+    sql: ${transaction_date} ;;
+
+  }
+
   dimension: date {
     type: date
     sql: ${TABLE}.date ;;
@@ -47,25 +60,86 @@ view: Sales {
   dimension: transaction_state {
     type: string
     sql: ${TABLE}.transaction_state ;;
+    group_label: "Location"
   }
 
   dimension: is_expensive {
     type: yesno
     sql: ${TABLE}.Sales>5000 ;;
+    description: "A sales is expensive when the total sales amount is greater than 5000"
   }
 
-  dimension: sales_group {
+  dimension: Salesrange {
     type: bin
-    style: interval
-    bins: [0,50000, 100000,150000,200000,250000]
-    sql: ${TABLE}.Sales ;;
+    sql: ${TABLE}.Sales;;
+    style: integer
+    bins: [0,50000,100000, 150000]
+    }
+
+dimension: states_grouping {
+  type:  string
+  case: {
+    when: {
+      sql: ${TABLE}.transaction_state in ("Florida", "Alabama", "Missouri") ;;
+    label: "Southern States"
+    }
+    when: {
+      sql: ${TABLE}.transaction_state in ("California") ;;
+      label: "Northern Coast"
+    }
+    else: "Other states"
   }
-  measure: Sales {
+  group_label: "Location"
+}
+
+dimension: states_groupings_sql {
+  type: string
+  sql: case when ${TABLE}.transaction_state in ("California") then "west coast" else "other states" end ;;
+}
+
+  dimension: Sales {
     type: number
     sql: ${TABLE}.Sales ;;
   }
-}
 
-explore: Sales {
+  dimension: hours {
+    type: string
+    sql: ${TABLE}.hours ;;
+  }
 
-}
+  dimension: Sales_with_tax {
+    type: number
+    sql: ${TABLE}.Sales* 1.13 ;;
+  }
+
+  dimension: Sales_with_tax_after_employees_spend {
+    type: number
+    sql: ${Sales_with_tax}-(0.2 * ${TABLE}.Sales);;
+  }
+
+  measure: count {
+    type: count
+  }
+
+  measure: total_Sales {
+    type: sum
+    sql: ${TABLE}.Sales ;;
+  }
+
+  measure: Average_Sales {
+    type: average
+    sql: ${TABLE}.Sales ;;
+  }
+
+  measure: list_of_transaction {
+    type: list
+    list_field: transaction_id
+  }
+
+  measure: percentage_of_total_sale {
+    type: percent_of_total
+    sql: ${total_Sales} ;;
+  }
+  }
+
+  explore: Sales {}
