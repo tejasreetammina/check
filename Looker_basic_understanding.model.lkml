@@ -226,14 +226,9 @@ explore: sales_explore {
       }
     }
 
-    dimension: office_zip_code {
-      type: zipcode
-      sql: ${TABLE}.office_zipcode ;;
-    }
 
     measure: count {
       type:  count
     }
 
   }
-
