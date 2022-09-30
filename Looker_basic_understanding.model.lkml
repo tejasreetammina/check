@@ -213,8 +213,8 @@ explore: sales_explore {
     }
 
     dimension: office_id {
-      type:  string
-      sql:  ${TABLE}.office_id ;;
+      type: string
+      sql: ${TABLE}.office_id ;;
     }
 
     dimension: office_name {
