@@ -136,10 +136,7 @@ dimension: states_groupings_sql {
     list_field: transaction_id
   }
 
-  measure: percentage_of_total_sale {
-    type: percent_of_total
-    sql: ${total_Sales} ;;
-  }
+
   }
 
   explore: Sales {}
